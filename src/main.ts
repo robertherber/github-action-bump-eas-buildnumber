@@ -4,6 +4,8 @@ import detectIndent from 'detect-indent'
 import {bumpAndroid, bumpIOS} from './utils'
 import {Config} from './types'
 
+type Platform = 'android' | 'ios'
+
 async function run(): Promise<void> {
   try {
     const filepath: string = core.getInput('filepath')
@@ -20,12 +22,7 @@ async function run(): Promise<void> {
 
     const json = JSON.parse(jsonStr) as Config
 
-    core.debug(jsonStr)
-
-    const platforms = platformsStr.toLowerCase().split(',') as (
-      | 'android'
-      | 'ios'
-    )[]
+    const platforms = platformsStr.toLowerCase().split(',') as Platform[]
 
     core.debug(`Platforms to process: ${platforms.join(',')}`)
 
@@ -44,7 +41,6 @@ async function run(): Promise<void> {
     const output = JSON.stringify(json, null, indent)
 
     core.debug(`Saving app.json`)
-    core.debug(output)
 
     fs.writeFileSync(filepath, output)
   } catch (error) {

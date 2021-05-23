@@ -54,7 +54,6 @@ function run() {
             const indent = indentInfo.indent || '    ';
             core.debug(`Detected indent: ${indentInfo.amount} ${indentInfo.type}`);
             const json = JSON.parse(jsonStr);
-            core.debug(jsonStr);
             const platforms = platformsStr.toLowerCase().split(',');
             core.debug(`Platforms to process: ${platforms.join(',')}`);
             if (platforms.includes('android')) {
@@ -69,7 +68,6 @@ function run() {
             }
             const output = JSON.stringify(json, null, indent);
             core.debug(`Saving app.json`);
-            core.debug(output);
             fs_1.default.writeFileSync(filepath, output);
         }
         catch (error) {
