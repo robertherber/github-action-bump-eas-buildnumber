@@ -1,11 +1,15 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Bump Expo build numbers'
+description: 'Bumps the buildNumber and versionCode in app.json'
+author: 'Robert Herber'
 inputs:
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  filepath: # change this
+    required: false
+    description: 'Path to app.json'
+    default: './app.json'
+  platforms: # change this
+    required: false
+    description: 'Comma-separated list of platforms (iOS and Android available)'
+    default: 'ios,android'
 runs:
   using: 'node12'
   main: 'dist/index.js'
