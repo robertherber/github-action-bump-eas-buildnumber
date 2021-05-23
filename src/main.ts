@@ -1,44 +1,52 @@
 import * as core from '@actions/core'
 import fs from 'fs'
-import {wait} from './wait'
 import detectIndent from 'detect-indent'
+import {bumpAndroid, bumpIOS} from './utils'
+import {Config} from './types'
 
 async function run(): Promise<void> {
   try {
     const filepath: string = core.getInput('filepath')
     const platformsStr: string = core.getInput('platforms')
 
+    core.debug(`Looking for app.json at '${filepath}'`)
+
+    const jsonStr = fs.readFileSync(filepath, 'utf-8')
+
+    const indentInfo = detectIndent(jsonStr)
+    const indent = indentInfo.indent || '    '
+
+    core.debug(`Detected indent: ${indentInfo.amount} ${indentInfo.type}`)
+
+    const json = JSON.parse(jsonStr) as Config
+
+    core.debug(jsonStr)
+
     const platforms = platformsStr.toLowerCase().split(',') as (
       | 'android'
       | 'ios'
     )[]
 
-    const jsonStr = fs.readFileSync(filepath, 'utf-8')
-
-    const indent = detectIndent(jsonStr).indent || '    '
-
-    const json = JSON.parse(jsonStr)
+    core.debug(`Platforms to process: ${platforms.join(',')}`)
 
     if (platforms.includes('android')) {
-      const versionCode = json.expo.android.versionCode as number
-      json.expo.android.versionCode = versionCode + 1
+      const versionCode = bumpAndroid(json)
+      core.debug(`Bump android versionCode to ${versionCode}`)
+      core.setOutput('versionCode', versionCode)
     }
 
     if (platforms.includes('ios')) {
-      const buildNumberStr = json.expo.ios.buildNumber as string
-      const buildNumber = parseInt(buildNumberStr)
-      json.expo.ios.buildNumber = buildNumber + 1
+      const nextBuildNumber = bumpIOS(json)
+      core.debug(`Bumping android versionCode to ${nextBuildNumber}`)
+      core.setOutput('buildNumber', nextBuildNumber)
     }
 
-    fs.writeFileSync(filepath, JSON.stringify(json, null, indent))
+    const output = JSON.stringify(json, null, indent)
 
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    core.debug(`Saving app.json`)
+    core.debug(output)
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    fs.writeFileSync(filepath, output)
   } catch (error) {
     core.setFailed(error.message)
   }
