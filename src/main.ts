@@ -32,13 +32,13 @@ async function run(): Promise<void> {
     if (platforms.includes('android')) {
       const versionCode = bumpAndroid(json)
       core.debug(`Bump android versionCode to ${versionCode}`)
-      core.setOutput('versionCode', versionCode)
+      core.setOutput('versioncode', versionCode)
     }
 
     if (platforms.includes('ios')) {
       const nextBuildNumber = bumpIOS(json)
       core.debug(`Bumping android versionCode to ${nextBuildNumber}`)
-      core.setOutput('buildNumber', nextBuildNumber)
+      core.setOutput('buildnumber', nextBuildNumber)
     }
 
     const output = JSON.stringify(json, null, indent)

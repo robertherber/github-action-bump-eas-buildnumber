@@ -1,6 +1,11 @@
 name: 'Bump Expo build numbers'
 description: 'Bumps the buildNumber and versionCode in app.json'
 author: 'Robert Herber'
+outputs:
+  versioncode:
+    description: The bumped Android versioncode
+  buildnumber:
+    description: The bumped iOS buildnumber
 inputs:
   filepath: # change this
     required: false

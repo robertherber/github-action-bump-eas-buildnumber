@@ -60,12 +60,12 @@ function run() {
             if (platforms.includes('android')) {
                 const versionCode = utils_1.bumpAndroid(json);
                 core.debug(`Bump android versionCode to ${versionCode}`);
-                core.setOutput('versionCode', versionCode);
+                core.setOutput('versioncode', versionCode);
             }
             if (platforms.includes('ios')) {
                 const nextBuildNumber = utils_1.bumpIOS(json);
                 core.debug(`Bumping android versionCode to ${nextBuildNumber}`);
-                core.setOutput('buildNumber', nextBuildNumber);
+                core.setOutput('buildnumber', nextBuildNumber);
             }
             const output = JSON.stringify(json, null, indent);
             core.debug(`Saving app.json`);
